@@ -1,0 +1,170 @@
+============================================================================================
+FEDWATCH v5 - EVALUATION REPORT (meeting level, real-time ALFRED vintages)
+============================================================================================
+Run: 20260923-230623-train-0b88a7   anchor: 11 days before each meeting
+Pre-registration: LOCKED NOW (first run - before any result was computed)  (hash c8b679059019)
+Dataset: 261 scheduled meetings (1994-02-03 -> 2026-09-15)
+Out-of-sample: 208 meetings (2000-10-03 -> 2026-09-15); Cut=27, Hold=143, Hike=38; at ZLB on D: 72
+Data source per series (rows): {"PCEPILFE": {"vintage": 209, "fallback_first_vintage": 52}, "CPILFESL": {"vintage": 237, "fallback_first_vintage": 24}, "UNRATE": {"vintage": 261}, "PAYEMS": {"vintage": 261}, "GDPC1": {"vintage": 261}, "NROU": {"fallback_first_vintage": 137, "vintage": 124}, "ICSA": {"vintage": 138, "fallback_first_vintage": 123}}
+
+--------------------------------------------------------------------------------------------
+[1] PRE-REGISTERED PRIMARY TEST
+--------------------------------------------------------------------------------------------
+Question : At the anchor date (11 days before a scheduled FOMC meeting), do compact, theory-driven macro variables measured in REAL TIME add information about the decision (Cut/Hold/Hike) beyond a yield-curve market proxy and the policy state?
+Compare  : logit|market+macro vs logit|market  | sample: ex-ZLB out-of-sample scheduled meetings (n=136, moves=63) | HAC lags 4 | alpha 0.1
+Result   : log loss 0.6989 vs 0.5118; mean diff +0.1871 (negative = macro helps); t = +1.05; p = 0.295
+VERDICT  : NO DETECTABLE DIFFERENCE
+Reported, not decisive: block-bootstrap 90% CI [-0.0443, +0.5410]; all meetings incl. ZLB: diff +0.1823, t +1.47, p 0.140 (n=208)
+Moves cluster in cycles: the effective sample is closer to the number of turning points - see [2].
+
+--------------------------------------------------------------------------------------------
+[2] SECONDARY S1 - TURNING POINTS (read as case studies)
+--------------------------------------------------------------------------------------------
+Episodes scored out-of-sample: 19 (of 29 in the whole sample); by type: {'pause': 8, 'reversal': 7, 'restart': 4}
+Higher P(actual outcome) at the turn: treatment 10, control 8, ties 1; sign test p = 0.815
+lead = meetings of warning with P(outcome) >= threshold before the turn (0 = only at the turn, -1 = missed).
+   meeting     type outcome  move_pp  at_zlb  threshold  p_turn[market]  lead[market]  p_turn[market+macro]  lead[market+macro]  p_turn[macro]  lead[macro]    winner
+2002-01-29    pause    Hold     0.00       0       0.50          0.5534             0                0.0001                  -1         0.0000           -1   control
+2002-11-06  restart     Cut    -0.50       0       0.25          0.0598            -1                0.2253                  -1         0.1780           -1 treatment
+2003-06-24  restart     Cut    -0.25       0       0.25          0.1809            -1                0.3287                   0         0.0796           -1 treatment
+2004-06-29 reversal    Hike     0.25       0       0.25          0.6872             1                0.7836                   4         0.4191            5 treatment
+2006-08-08    pause    Hold     0.00       0       0.50          0.7680             2                0.7532                   2         0.5277            0   control
+2007-09-18 reversal     Cut    -0.50       0       0.25          0.6166             2                0.7573                   3         0.1830           -1 treatment
+2008-06-24    pause    Hold     0.00       0       0.50          0.7656             0                0.6649                   0         0.3571           -1   control
+2009-01-27    pause    Hold     0.00       1       0.50          0.2754            -1                0.0611                  -1         0.0526           -1   control
+2015-12-15 reversal    Hike     0.25       1       0.25          0.0359            -1                0.0835                  -1         0.0341           -1 treatment
+2016-12-13  restart    Hike     0.25       0       0.25          0.3130             0                0.4459                   0         0.3620            6 treatment
+2019-07-30 reversal     Cut    -0.25       0       0.25          0.2439            -1                0.3888                   0         0.1045           -1 treatment
+2019-12-10    pause    Hold     0.00       0       0.50          0.6562             1                0.6124                   1         0.6675            4   control
+2022-03-15 reversal    Hike     0.25       1       0.25          0.3348             0                0.1801                  -1         0.0539           -1   control
+2023-06-13    pause    Hold     0.00       0       0.50          0.0662            -1                0.0877                  -1         0.2359           -1 treatment
+2024-09-17 reversal     Cut    -0.50       0       0.25          0.5029             0                0.5517                   0         0.0996           -1 treatment
+2025-01-28    pause    Hold     0.00       0       0.50          0.7155             0                0.6638                   0         0.5158            1   control
+2025-09-16  restart     Cut    -0.25       0       0.25          0.3390             0                0.4040                   0         0.1204           -1 treatment
+2026-01-27    pause    Hold     0.00       0       0.50          0.7354             1                0.6590                   1         0.5160            1   control
+2026-09-15 reversal    Hike     0.25       0       0.25          0.5691             2                0.5721                   2         0.2567            0       tie
+Direction changes at UNSCHEDULED meetings (real turns, not scoreable here): 2001-01-03 (-0.50)
+
+--------------------------------------------------------------------------------------------
+[3] SECONDARY S2 - DO REAL-TIME DATA PREDICT MONETARY POLICY SURPRISES?
+--------------------------------------------------------------------------------------------
+Not run: pass --mps-file (SF Fed 'Monetary Policy Surprises' file; see FEDWATCH_V5.md).
+
+--------------------------------------------------------------------------------------------
+[4] EXPLORATORY (not pre-registered - never headline these)
+--------------------------------------------------------------------------------------------
+4a. All models / feature sets, ex-ZLB out-of-sample (lower log loss = better):
+      model          features   n  logloss  brier    acc  macroF1  AUC_move  AUC_cut  AUC_hike
+        xgb      market+macro 136   0.4856 0.2737 0.8162   0.8021    0.8780   0.9599    0.9419
+        ens      market+macro 136   0.4880 0.2820 0.8162   0.8061    0.8913   0.9813    0.9539
+        ens            market 136   0.5028 0.3002 0.7868   0.7711    0.8841   0.9674    0.9425
+      logit            market 136   0.5118 0.3156 0.7574   0.7317    0.8704   0.9667    0.9344
+        xgb market+macro_rich 136   0.5241 0.3106 0.7721   0.7594    0.8628   0.9589    0.9344
+        xgb            market 136   0.5287 0.3114 0.8015   0.7898    0.8617   0.9524    0.9239
+        ens market+macro_rich 136   0.5433 0.3261 0.7868   0.7795    0.8432   0.9667    0.9442
+     ologit            market 136   0.5657 0.3607 0.7647   0.7024    0.8224   0.9361    0.9553
+         rf            market 136   0.5769 0.3537 0.7426   0.6735    0.8363   0.9456    0.9406
+         rf      market+macro 136   0.5841 0.3567 0.7426   0.6836    0.8419   0.9623    0.9414
+         rf market+macro_rich 136   0.6410 0.3949 0.7279   0.6387    0.8117   0.9555    0.9408
+     ologit      market+macro 136   0.6568 0.4049 0.7132   0.6697    0.8084   0.9079    0.9583
+     ologit market+macro_rich 136   0.6568 0.4049 0.7132   0.6697    0.8084   0.9079    0.9583
+      logit             state 136   0.6883 0.4293 0.6912   0.6184    0.7174   0.8994    0.8601
+        ens             state 136   0.6960 0.4299 0.6324   0.5651    0.7607   0.9008    0.8662
+      logit      market+macro 136   0.6989 0.3432 0.7647   0.7551    0.8237   0.9708    0.9303
+     ologit             state 136   0.7021 0.4405 0.6912   0.6152    0.7090   0.8940    0.8596
+        ens             macro 136   0.7062 0.4439 0.6471   0.6163    0.6984   0.9035    0.8806
+         rf             state 136   0.7217 0.4418 0.6691   0.6344    0.7477   0.8828    0.8585
+        xgb             state 136   0.7324 0.4587 0.6176   0.5621    0.7345   0.9004    0.8411
+        xgb             macro 136   0.7574 0.4810 0.6250   0.5924    0.6851   0.8665    0.8639
+persistence             state 136   0.7604 0.4716 0.6324   0.6078    0.6564   0.8683    0.7540
+         rf             macro 136   0.7659 0.4737 0.5882   0.5003    0.6952   0.8610    0.8544
+      logit market+macro_rich 136   0.8220 0.4426 0.6544   0.6551    0.7156   0.9419    0.8772
+      logit             macro 136   0.8996 0.4892 0.6176   0.6026    0.6719   0.9008    0.8603
+     ologit             macro 136   0.9328 0.4989 0.6471   0.5873    0.6808   0.8573    0.8767
+      prior             state 136   1.0701 0.6352 0.5368   0.2329    0.4998   0.4205    0.3264
+
+4b. Same, all out-of-sample meetings:
+      model          features   n  logloss  brier    acc  macroF1  AUC_move  AUC_cut  AUC_hike
+        xgb      market+macro 208   0.3453 0.1902 0.8750   0.8265    0.9315   0.9705    0.9639
+        ens      market+macro 208   0.3620 0.2042 0.8654   0.8168    0.9339   0.9818    0.9709
+        ens            market 208   0.3621 0.2111 0.8510   0.7915    0.9329   0.9752    0.9641
+        xgb            market 208   0.3705 0.2140 0.8654   0.8182    0.9206   0.9640    0.9506
+        xgb market+macro_rich 208   0.3724 0.2161 0.8462   0.7913    0.9222   0.9707    0.9577
+      logit            market 208   0.3945 0.2355 0.8221   0.7399    0.9133   0.9718    0.9481
+        ens market+macro_rich 208   0.4119 0.2401 0.8413   0.7915    0.9024   0.9693    0.9644
+         rf            market 208   0.4201 0.2489 0.8221   0.6991    0.9026   0.9568    0.9618
+         rf      market+macro 208   0.4308 0.2517 0.8269   0.7144    0.9069   0.9726    0.9641
+     ologit            market 208   0.4385 0.2631 0.8317   0.7188    0.8713   0.9503    0.9709
+         rf market+macro_rich 208   0.4814 0.2809 0.8173   0.6694    0.8884   0.9652    0.9635
+      logit             state 208   0.5418 0.3195 0.7788   0.6329    0.8207   0.9241    0.8812
+        ens             state 208   0.5437 0.3189 0.7404   0.5913    0.8343   0.9188    0.8762
+        ens             macro 208   0.5496 0.3314 0.7500   0.6483    0.8032   0.9173    0.8932
+         rf             state 208   0.5719 0.3301 0.7644   0.6570    0.8148   0.8909    0.8657
+        xgb             state 208   0.5764 0.3418 0.7308   0.5919    0.8054   0.9061    0.8541
+      logit      market+macro 208   0.5768 0.2755 0.8125   0.7513    0.8723   0.9638    0.9444
+        xgb             macro 208   0.5905 0.3602 0.7356   0.6285    0.7725   0.8762    0.8786
+     ologit market+macro_rich 208   0.5936 0.3496 0.7644   0.6646    0.8304   0.8965    0.9692
+     ologit      market+macro 208   0.5936 0.3496 0.7644   0.6646    0.8304   0.8965    0.9692
+         rf             macro 208   0.5954 0.3500 0.7115   0.5318    0.7937   0.8742    0.8749
+persistence             state 208   0.5959 0.3485 0.7404   0.6397    0.7211   0.8577    0.7625
+     ologit             state 208   0.5985 0.3465 0.7692   0.6199    0.7446   0.8729    0.8498
+      logit market+macro_rich 208   0.6977 0.3666 0.7260   0.6686    0.8003   0.9390    0.9111
+      logit             macro 208   0.7200 0.3729 0.7163   0.6270    0.7899   0.9186    0.8940
+     ologit             macro 208   0.8238 0.4399 0.7212   0.5929    0.6926   0.8242    0.8732
+      prior             state 208   0.8678 0.4939 0.6875   0.2716    0.4531   0.3666    0.3105
+
+4c. Other comparisons, ex-ZLB (A - B mean log-loss diff; negative = A better):
+  macro vs state only                logit|macro                vs logit|state              diff +0.2113 t +1.08 p 0.281
+  market proxy vs state only         logit|market               vs logit|state              diff -0.1765 t -3.84 p 0.000
+  macro only vs market only          logit|macro                vs logit|market             diff +0.3878 t +2.09 p 0.036
+  market+macro vs persistence        logit|market+macro         vs persistence|state        diff -0.0615 t -0.30 p 0.761
+  rich macro vs compact macro        logit|market+macro_rich    vs logit|market+macro       diff +0.1231 t +2.99 p 0.003
+  ordered logit vs logit             ologit|market+macro        vs logit|market+macro       diff -0.0421 t -0.34 p 0.730
+  ML ensemble vs logit               ens|market+macro           vs logit|market+macro       diff -0.2109 t -1.29 p 0.197
+  ML on rich set vs compact logit    ens|market+macro_rich      vs logit|market+macro       diff -0.1555 t -0.94 p 0.346
+
+4d. Encompassing, ex-ZLB: 1{event} ~ logit(p_market_only) + logit(p_macro_only):
+  Cut       events  27  b_market +1.94 (p 0.000)  b_macro +0.40 (p 0.049)
+  Hike      events  36  b_market +1.48 (p 0.007)  b_macro +0.60 (p 0.015)
+  Any move  events  63  b_market +1.65 (p 0.000)  b_macro -0.10 (p 0.439)
+
+4e. Largest macro-only vs market-only disagreements, P(any move):
+               p_move_macro_only  p_move_market_only    gap actual  tgt_upper_at_D
+meeting_start                                                                     
+2020-06-09                 1.000               0.013  0.987   Hold            0.25
+2002-08-13                 0.999               0.202  0.798   Hold            1.75
+2002-06-25                 1.000               0.333  0.667   Hold            1.75
+2001-08-21                 0.873               0.243  0.630    Cut            3.75
+2001-01-30                 0.343               0.944 -0.601    Cut            6.00
+2007-12-11                 0.397               0.981 -0.584    Cut            4.50
+2016-04-26                 0.816               0.237  0.579   Hold            0.50
+2002-05-07                 1.000               0.430  0.569   Hold            1.75
+2002-01-29                 1.000               0.447  0.553   Hold            1.75
+2016-01-26                 0.729               0.204  0.525   Hold            0.50
+2016-03-15                 0.810               0.319  0.491   Hold            0.50
+2008-01-29                 0.513               0.991 -0.478    Cut            4.25
+2017-01-31                 0.601               0.130  0.471   Hold            0.75
+2017-07-25                 0.684               0.220  0.464   Hold            1.25
+2016-07-26                 0.666               0.207  0.458   Hold            0.50
+
+4f. Real-time vs revised data (Orphanides-style):
+  meetings whose macro inputs change with today's revised numbers: 261 of 261
+  mean |diff| per feature: {'taylor_gap': 0.3637, 'infl_mom': 0.3979, 'sahm': 0.053, 'claims_chg_3m': 3.444, 'core_pce_yoy': 0.2227, 'u_gap': 0.1692, 'payems_3m_ann': 0.4672, 'gdp_yoy': 0.4893}
+  max  |diff| per feature: {'taylor_gap': 2.116, 'infl_mom': 2.9932, 'sahm': 1.5333, 'claims_chg_3m': 343.9318, 'core_pce_yoy': 1.294, 'u_gap': 1.7275, 'payems_3m_ann': 5.0138, 'gdp_yoy': 1.8395}
+  primary comparison with REVISED data: diff +0.2187, t +1.18, p 0.237 -> NO DETECTABLE DIFFERENCE
+
+--------------------------------------------------------------------------------------------
+[5] DATA AND CALENDAR NOTES
+--------------------------------------------------------------------------------------------
+Calendar: 279 scheduled + 9 unscheduled rows; UNVERIFIED rows in/near sample: 0 (years []); years without 8 scheduled: {2020: 7}
+Target changes with no meeting/call nearby: none
+
+--------------------------------------------------------------------------------------------
+[6] CAVEATS
+--------------------------------------------------------------------------------------------
+* Low power: ~10-15 genuine turning points; p-values are descriptive, the case studies carry the result.
+* 'fallback_first_vintage' rows predate a series' first ALFRED vintage (values slightly revised).
+* Market proxy = T-bill / 2y yields minus the effective funds rate, NOT futures-implied probabilities:
+  write 'beyond a yield-curve proxy', never 'beyond the market'.
+* The label ignores size (25 vs 50 vs 75bp); the surprise track (S2) is the magnitude-aware test.
+* Information-content study, not a trading signal.

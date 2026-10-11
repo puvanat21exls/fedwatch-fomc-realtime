@@ -1,0 +1,158 @@
+{
+  "hash": "c8b679059019fdf9e5d2cf004b13078e56d9b2fd2a15158dd1bcb65a5ac55777",
+  "locked_utc": "2026-09-24T06:06:23Z",
+  "git": {
+    "commit": "d8de7aba8c16bb6c48bc29b2004490c91a72e46e",
+    "dirty": true
+  },
+  "spec": {
+    "preregistration": {
+      "id": "fedwatch-v5-P1",
+      "question": "At the anchor date (11 days before a scheduled FOMC meeting), do compact, theory-driven macro variables measured in REAL TIME add information about the decision (Cut/Hold/Hike) beyond a yield-curve market proxy and the policy state?",
+      "model": "logit",
+      "treatment": "market+macro",
+      "control": "market",
+      "metric": "multiclass log loss, probabilities floored at PROB_FLOOR",
+      "sample": "scheduled meetings in the walk-forward out-of-sample window whose target upper bound on the as-of date was above ZLB_UPPER (ex-ZLB)",
+      "data": "ALFRED vintages as of D; release-rule fallback only before a series' first vintage (flagged)",
+      "test": "Diebold-Mariano: mean per-meeting log-loss difference, Newey-West HAC (HAC_LAGS), two-sided",
+      "alpha": 0.1,
+      "decision_rule": "p < alpha and treatment better -> 'macro adds information'; p < alpha and treatment worse -> 'macro hurts out of sample'; otherwise 'no detectable difference'",
+      "reported_not_decisive": [
+        "same test on ALL out-of-sample meetings incl. ZLB",
+        "circular block bootstrap CI of the mean difference (block BOOT_BLOCK)"
+      ],
+      "secondary": [
+        "S1 turning points: same two models at reversals / restarts / pauses; P(actual outcome) at the turn and lead time; sign test over episodes; reported as case studies",
+        "S2a surprises (replication): does real-time info known the day before the meeting predict the RAW Bauer-Swanson MPS? Expanding-window OLS vs zero forecast, Clark-West one-sided, alpha 0.10",
+        "S2b surprises (extension): same, with info as of the 11-day anchor (pre-blackout)"
+      ]
+    },
+    "features": {
+      "control": [
+        "chg_since_prev_mtg",
+        "chg_last3_mtgs",
+        "days_since_move",
+        "at_zlb",
+        "bill3m_gap",
+        "bill6m_gap",
+        "y2_gap"
+      ],
+      "treatment": [
+        "chg_since_prev_mtg",
+        "chg_last3_mtgs",
+        "days_since_move",
+        "at_zlb",
+        "bill3m_gap",
+        "bill6m_gap",
+        "y2_gap",
+        "taylor_gap",
+        "infl_mom",
+        "sahm",
+        "claims_chg_3m"
+      ],
+      "common_sample_filter": [
+        "chg_since_prev_mtg",
+        "chg_last3_mtgs",
+        "days_since_move",
+        "at_zlb",
+        "bill3m_gap",
+        "bill6m_gap",
+        "y2_gap",
+        "taylor_gap",
+        "infl_mom",
+        "sahm",
+        "claims_chg_3m",
+        "core_pce_yoy",
+        "core_cpi_yoy",
+        "core_cpi_3m_ann",
+        "u_gap",
+        "payems_3m_ann",
+        "gdp_yoy",
+        "vix",
+        "t10y2y",
+        "slope_chg_3m",
+        "eq_ret_3m",
+        "eq_dd_12m"
+      ]
+    },
+    "series": {
+      "vintage": {
+        "PCEPILFE": "M",
+        "CPILFESL": "M",
+        "UNRATE": "M",
+        "PAYEMS": "M",
+        "GDPC1": "Q",
+        "NROU": "Q",
+        "ICSA": "W"
+      },
+      "latest": [
+        "DFEDTAR",
+        "DFEDTARU",
+        "DFEDTARL",
+        "DFF",
+        "DGS3MO",
+        "DGS6MO",
+        "DGS2",
+        "T10Y2Y",
+        "VIXCLS",
+        "NASDAQCOM",
+        "DCOILWTICO"
+      ]
+    },
+    "release_rules": {
+      "PCEPILFE": {
+        "months": 1,
+        "day": 28
+      },
+      "CPILFESL": {
+        "months": 1,
+        "day": 15
+      },
+      "UNRATE": {
+        "months": 1,
+        "day": 8
+      },
+      "PAYEMS": {
+        "months": 1,
+        "day": 8
+      },
+      "GDPC1": {
+        "months": 3,
+        "day": 28
+      },
+      "NROU": {
+        "always": true
+      },
+      "ICSA": {
+        "days": 5
+      }
+    },
+    "taylor": {
+      "r_star": 2.0,
+      "pi_star": 2.0,
+      "a_pi": 0.5,
+      "a_y": 0.5,
+      "okun": 2.0
+    },
+    "timing": {
+      "OBS_START": "1990-01-01",
+      "SAMPLE_START": "1994-02-01",
+      "ANCHOR_DAYS": 11,
+      "LABEL_LAG_DAYS": 3,
+      "MOVE_THRESHOLD": 0.1,
+      "ZLB_UPPER": 0.25
+    },
+    "model": {
+      "LOGIT_C": 0.3
+    },
+    "evaluation": {
+      "MIN_TRAIN_MEETINGS": 48,
+      "TEST_BLOCK_MEETINGS": 8,
+      "PROB_FLOOR": 0.001,
+      "HAC_LAGS": 4,
+      "ALPHA": 0.1
+    }
+  },
+  "history": []
+}
