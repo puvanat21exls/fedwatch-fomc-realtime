@@ -155,12 +155,12 @@ Forecasts for upcoming meetings are appended to a hash-chained ledger ([`results
 
 | Meeting | Anchor day | Status |
 |---|---|---|
-| Oct 27–28, 2026 | Fri Oct 16, 2026 | Scheduled |
+| Oct 27–28, 2026 | Fri Oct 16, 2026 | **Logged** Oct 19 (ledger entry #4); outcome pending |
 | Dec 8–9, 2026 | Fri Nov 27, 2026 | Scheduled |
 | Jan 26–27, 2027 | Fri Jan 15, 2027 | Scheduled |
 | Mar 16–17, 2027 | Fri Mar 5, 2027 | Scheduled |
 
-The ledger currently holds three unofficial practice forecasts for the October meeting. A handful of live forecasts is a demonstration, not evidence.
+The ledger holds three unofficial practice forecasts and the first official forecast for the October meeting. A handful of live forecasts is a demonstration, not evidence.
 
 ---
 
