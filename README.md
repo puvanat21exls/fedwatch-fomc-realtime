@@ -155,12 +155,12 @@ Forecasts for upcoming meetings are appended to a hash-chained ledger ([`results
 
 | Meeting | Anchor day | Status |
 |---|---|---|
-| Oct 27–28, 2026 | Fri Oct 16, 2026 | **Logged** Oct 19 (ledger entry #4); outcome pending |
+| Oct 27–28, 2026 | Fri Oct 16, 2026 | **Scored** Nov 2 (ledger entry #8): forecast Hike 68.1% / 68.7%, outcome **Hold** (miss); log loss 1.143 (control) / 1.163 (treatment) |
 | Dec 8–9, 2026 | Fri Nov 27, 2026 | Scheduled |
 | Jan 26–27, 2027 | Fri Jan 15, 2027 | Scheduled |
 | Mar 16–17, 2027 | Fri Mar 5, 2027 | Scheduled |
 
-The ledger holds three unofficial practice forecasts and the first official forecast for the October meeting. A handful of live forecasts is a demonstration, not evidence.
+The ledger holds three unofficial practice forecasts, the first official forecast for the October meeting, and their scored outcomes. The October forecast missed: the target range stayed at 3.75–4.00%, while both models gave Hold only 31–32%. For comparison, CME FedWatch showed Hold at 82.3% on Oct 19 (taken on the logging day, not the anchor day), a log loss of about 0.19. A handful of live forecasts is a demonstration, not evidence.
 
 ---
 
