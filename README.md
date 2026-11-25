@@ -1,6 +1,6 @@
 # 🏛️ FedWatch: Real-Time Forecasting of FOMC Rate Decisions
 
-A pre-registered research study of **261 scheduled FOMC meetings (Feb 1994 – Sep 2026)** asking one question: does macroeconomic data, measured **exactly as it was published at the time** (ALFRED real-time vintages), add information about the Fed's decision beyond what a Treasury yield-curve proxy already says? One test was fixed and hash-locked before any result existed. Everything else is labelled exploratory.
+A pre-registered research study of **261 scheduled FOMC meetings (Feb 1994 – Sep 2026)** asking one question: does macroeconomic data, measured **exactly as it was published at the time** (ALFRED real-time vintages), add information about the Fed's decision beyond what a Treasury yield-curve proxy already says? One test was fixed and hash-locked before the first real-data run. Everything else is labelled exploratory.
 
 > Research study only: it measures information content. It does not trade and is not investment advice.
 
@@ -8,16 +8,16 @@ A pre-registered research study of **261 scheduled FOMC meetings (Feb 1994 – S
 
 ## 📌 Research Question & Core Empirical Findings
 
-Tools such as CME FedWatch read the Fed's next move straight from fed funds futures, and public macro data cannot beat them. The useful question is narrower: **eleven days before a meeting, on the last day before the Fed's blackout, does real-time macro data add anything to market pricing, and where is the market wrong?**
+Tools such as CME FedWatch read the Fed's next move straight from fed funds futures; this study does not test against them and uses a Treasury yield-curve proxy instead. The question is narrower: **eleven days before a meeting, on the last day before the Fed's blackout, does real-time macro data add anything to market pricing, and where is the market wrong?**
 
 ### Key Empirical Results (208 out-of-sample meetings, Oct 2000 – Sep 2026)
 
 * **Macro adds no detectable information about the decision (pre-registered test, $p = 0.30$):** Outside the zero-rate years (n = 136), a logit using the policy state plus three yield-curve gaps scores a log loss of **0.512**. Adding four real-time macro variables gives **0.699**. The difference is not statistically distinguishable from zero.
 * **The result does not depend on the forecast day (exploratory):** Re-running the same comparison 7, 4 and 1 day(s) before the meeting, after the final CPI and jobs releases, gives the same verdict ($p$ = 0.25 to 0.34).
 * **Five meetings in 2002 explain the gap (descriptive):** The unemployment signal read 1.3–1.6 against a training-sample maximum of 0.53, and the macro model confidently predicted rate moves that never came. Those five meetings are 121% of the total loss gap; across the other 131 the macro model is slightly *better* (−0.04). Trimming extreme inputs narrows the gap to +0.07 but does not close it.
-* **Markets' surprises are partly predictable (Clark–West $p = 0.008$):** Real-time data known 11 days ahead predicts the Bauer–Swanson monetary policy surprise out of sample. This holds when Covid meetings are excluded, when inputs are winsorized, and with both. The effect is small (a few basis points; out-of-sample $R^2 \approx -0.03$) and concentrated in time: 77% of the evidence was built up before 2009.
+* **Markets' surprises are partly predictable (Clark–West $p = 0.008$):** Real-time data known 11 days ahead predicts the Bauer–Swanson monetary policy surprise out of sample. In exploratory checks it holds when Covid meetings are excluded, when inputs are winsorized, and with both. The effect is small (a few basis points; out-of-sample $R^2$ is below zero in every variant, −0.02 to −0.04 once the Apr 2020 outlier is excluded or trimmed) and concentrated in time: 77% of the evidence was built up before 2009.
 
-**In one sentence:** the market cannot be out-predicted on what the Fed will do, but when the market is wrong, it is wrong in a slightly predictable way.
+**In one sentence:** real-time macro data adds nothing detectable to a yield-curve proxy on what the Fed will do, but when the market is surprised, the surprise is slightly predictable.
 
 ![Thirty years of Fed decisions](results/figures/fig1_fed_decisions.png)
 
